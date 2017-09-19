@@ -16,7 +16,7 @@ import com.lixicode.typedecoration.TypeDecoration;
  * @date 2017/9/19
  */
 
-public class MultiTypeDecoration extends AbstractDecoration {
+public class MultiDecoration extends AbstractDecoration {
 
     private final SparseArrayCompat<Decoration> arrays = new SparseArrayCompat<>();
 

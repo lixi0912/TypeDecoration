@@ -7,7 +7,7 @@ import com.lixicode.typedecoration.Condition;
 
 import java.util.Arrays;
 
-public class SimpleTypeCondition implements Condition {
+public class SingleTypeCondition implements Condition {
 
     private int[] types;
 
