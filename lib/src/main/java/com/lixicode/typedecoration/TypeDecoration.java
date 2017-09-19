@@ -10,6 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.lixicode.typedecoration.conditions.MultiTypeCondition;
+import com.lixicode.typedecoration.conditions.SimpleTypeCondition;
+import com.lixicode.typedecoration.decorations.SingleLinearDecoration;
+import com.lixicode.typedecoration.utils.DecorationUtils;
+
 /**
  * <pre>
  * TypeDecoration decoration = TypeDecoration.multiAble(this,
@@ -45,10 +50,10 @@ public class TypeDecoration extends RecyclerView.ItemDecoration {
     private final Rect mBounds = new Rect();
 
     @NonNull
-    private final DecorationCondition condition;
+    private final Condition condition;
 
     @Nullable
-    private final DrawableRegister typeDrawable;
+    private final Decoration decoration;
 
     private int marginStart;
     private int marginEnd;
@@ -56,33 +61,41 @@ public class TypeDecoration extends RecyclerView.ItemDecoration {
 
 
     public static TypeDecoration simple(Context context, int orientation) {
-        return new TypeDecoration(context, orientation, new DecorationCondition.SimpleTypeCondition());
+        return new TypeDecoration(context, orientation, new SimpleTypeCondition());
     }
 
     public static TypeDecoration multiAble(Context context, int orientation) {
-        return new TypeDecoration(context, orientation, new DecorationCondition.MultiTypeCondition());
+        return new TypeDecoration(context, orientation, new MultiTypeCondition());
     }
 
 
-    public TypeDecoration(Context context, int orientation, @NonNull DecorationCondition condition) {
-        this(context, orientation, condition, new DrawableRegister.SingleTypeDrawable(context));
+    public TypeDecoration(Context context, int orientation, @NonNull Condition condition) {
+        this(context, orientation, condition, new SingleLinearDecoration(context));
     }
 
-    public TypeDecoration(Context context, int orientation, @NonNull DecorationCondition condition, @Nullable DrawableRegister typeDrawable) {
+    public TypeDecoration(Context context, int orientation, @NonNull Condition condition, @Nullable Decoration decoration) {
         this.condition = condition;
-        this.typeDrawable = typeDrawable;
+        this.decoration = decoration;
         setOrientation(orientation);
     }
 
     public boolean registerDrawable(int type, Drawable drawable) {
-        if (null != typeDrawable) {
+        if (null != decoration) {
             int typeIndex = condition.typeIndexOf(type);
-            typeDrawable.registerTypeDraw(typeIndex, drawable);
+            decoration.registerTypeDraw(typeIndex, drawable);
             return true;
         }
         return false;
     }
 
+    public boolean registerDecoration(int type, Decoration decoration) {
+        if (null != decoration) {
+            int typeIndex = condition.typeIndexOf(type);
+            decoration.registerDecoration(typeIndex, decoration);
+            return true;
+        }
+        return false;
+    }
 
     /**
      * @param types types of RecyclerView
@@ -98,6 +111,28 @@ public class TypeDecoration extends RecyclerView.ItemDecoration {
     public void setMarginEnd(int marginEnd) {
         this.marginEnd = marginEnd;
     }
+
+    public int getOrientation() {
+        return mOrientation;
+    }
+
+    public Rect getBounds() {
+        return mBounds;
+    }
+
+    @NonNull
+    public Condition getCondition() {
+        return condition;
+    }
+
+    public int getMarginStart() {
+        return marginStart;
+    }
+
+    public int getMarginEnd() {
+        return marginEnd;
+    }
+
 
     /**
      * Sets the orientation for this divider. This should be called if
@@ -120,110 +155,27 @@ public class TypeDecoration extends RecyclerView.ItemDecoration {
     @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
         super.onDraw(c, parent, state);
-        if (parent.getLayoutManager() == null || typeDrawable == null || drawOverlay) {
+        if (parent.getLayoutManager() == null || decoration == null || drawOverlay) {
             return;
         }
-        if (mOrientation == VERTICAL) {
-            drawVertical(c, parent);
-        } else {
-            drawHorizontal(c, parent);
-        }
+        decoration.draw(this, c, parent, state);
     }
 
     @Override
     public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
         super.onDrawOver(c, parent, state);
-        if (parent.getLayoutManager() == null || typeDrawable == null || !drawOverlay) {
+        if (parent.getLayoutManager() == null || decoration == null || !drawOverlay) {
             return;
         }
-        if (mOrientation == VERTICAL) {
-            drawVertical(c, parent);
-        } else {
-            drawHorizontal(c, parent);
-        }
-    }
-
-    private void drawHorizontal(Canvas canvas, RecyclerView parent) {
-        canvas.save();
-        final int left;
-        final int right;
-        //noinspection AndroidLintNewApi - NewApi lint fails to handle overrides.
-        if (parent.getClipToPadding()) {
-            left = parent.getPaddingLeft();
-            right = parent.getWidth() - parent.getPaddingRight();
-            canvas.clipRect(left, parent.getPaddingTop(), right,
-                    parent.getHeight() - parent.getPaddingBottom());
-        } else {
-            left = 0;
-            right = parent.getWidth();
-        }
-
-        DrawableRegister typeDrawable = this.typeDrawable;
-        final int childCount = parent.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            final View child = parent.getChildAt(i);
-            final int viewType = viewTypeOf(parent, child);
-            int typeIndex = condition.typeIndexOf(viewType);
-            if (typeIndex >= 0
-                    && condition.isSameType(parent, child, i)) {
-                parent.getDecoratedBoundsWithMargins(child, mBounds);
-                final int bottom = mBounds.bottom + Math.round(child.getTranslationY());
-                final int top = bottom - typeDrawable.getIntrinsicHeight(typeIndex);
-                typeDrawable.draw(canvas, typeIndex, left, top + marginStart, right, bottom - marginEnd);
-            }
-
-        }
-        canvas.restore();
-    }
-
-    private void drawVertical(Canvas canvas, RecyclerView parent) {
-        canvas.save();
-        final int left;
-        final int right;
-        //noinspection AndroidLintNewApi - NewApi lint fails to handle overrides.
-        if (parent.getClipToPadding()) {
-            left = parent.getPaddingLeft();
-            right = parent.getWidth() - parent.getPaddingRight();
-            canvas.clipRect(left, parent.getPaddingTop(), right,
-                    parent.getHeight() - parent.getPaddingBottom());
-        } else {
-            left = 0;
-            right = parent.getWidth();
-        }
-
-        DrawableRegister typeDrawable = this.typeDrawable;
-        final int childCount = parent.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            final View child = parent.getChildAt(i);
-            final int viewType = viewTypeOf(parent, child);
-            int typeIndex = condition.typeIndexOf(viewType);
-            if (typeIndex >= 0
-                    && condition.isSameType(parent, child, i)) {
-                parent.getDecoratedBoundsWithMargins(child, mBounds);
-                final int bottom = mBounds.bottom + Math.round(child.getTranslationY());
-                final int top = bottom - typeDrawable.getIntrinsicHeight(typeIndex);
-                typeDrawable.draw(canvas, typeIndex, left + marginStart, top, right - marginEnd, bottom);
-            }
-        }
-        canvas.restore();
-    }
-
-
-    /**
-     * @param parent the RecyclerView
-     * @param view   the item view to draw
-     */
-    private int viewTypeOf(RecyclerView parent, View view) {
-        int position = parent.getChildAdapterPosition(view);
-        return parent.getAdapter().getItemViewType(position);
+        decoration.draw(this, c, parent, state);
     }
 
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                                RecyclerView.State state) {
-        final int typeIndex = condition.typeIndexOf(viewTypeOf(parent, view));
-        DrawableRegister typeDrawable = this.typeDrawable;
+        final int typeIndex = condition.typeIndexOf(DecorationUtils.viewTypeOf(parent, view));
+        Decoration typeDrawable = this.decoration;
         if (typeDrawable == null || typeIndex == -1 || drawOverlay) {
             outRect.setEmpty();
             return;
