@@ -25,8 +25,7 @@ public interface Condition {
      * @param child  the view to draw divider
      * @return true if hasConsistItemType or has same type with next item
      */
-    boolean isSameType(RecyclerView parent, View child, int index);
-
+    boolean isSameType(Decorator decorator, RecyclerView parent, View child, int index);
 
 
 }

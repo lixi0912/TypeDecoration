@@ -8,11 +8,11 @@ import android.view.View;
 
 import com.lixicode.typedecoration.Condition;
 import com.lixicode.typedecoration.Decoration;
-import com.lixicode.typedecoration.TypeDecoration;
+import com.lixicode.typedecoration.Decorator;
 import com.lixicode.typedecoration.utils.DecorationUtils;
 
-import static com.lixicode.typedecoration.TypeDecoration.HORIZONTAL;
-import static com.lixicode.typedecoration.TypeDecoration.VERTICAL;
+import static com.lixicode.typedecoration.Decorator.HORIZONTAL;
+import static com.lixicode.typedecoration.Decorator.VERTICAL;
 
 /**
  * @author 陈晓辉
@@ -23,6 +23,18 @@ import static com.lixicode.typedecoration.TypeDecoration.VERTICAL;
 abstract class AbstractDecoration implements Decoration {
     private int marginStart;
     private int marginEnd;
+    private int orientation;
+
+
+    @Override
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
+    }
+
+    @Override
+    public int getOrientation() {
+        return orientation;
+    }
 
     @Override
     public final void setMarginStart(int marginStart) {
@@ -44,7 +56,7 @@ abstract class AbstractDecoration implements Decoration {
         return marginEnd;
     }
 
-    private void drawHorizontal(@NonNull TypeDecoration decoration,
+    private void drawHorizontal(@NonNull Decorator decorator,
                                 @NonNull Canvas canvas, @NonNull RecyclerView parent) {
         canvas.save();
         final int left;
@@ -60,17 +72,17 @@ abstract class AbstractDecoration implements Decoration {
             right = parent.getWidth();
         }
 
-        final Condition condition = decoration.getCondition();
-        final int marginStart = decoration.getMarginStart() + getMarginStart();
-        final int marginEnd = decoration.getMarginEnd() + getMarginEnd();
-        final Rect bounds = decoration.getBounds();
+        final Condition condition = decorator.getCondition();
+        final int marginStart = decorator.getMarginStart() + getMarginStart();
+        final int marginEnd = decorator.getMarginEnd() + getMarginEnd();
+        final Rect bounds = decorator.getBounds();
         final int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
             final int viewType = DecorationUtils.viewTypeOf(parent, child);
             int typeIndex = condition.typeIndexOf(viewType);
             if (typeIndex >= 0
-                    && condition.isSameType(parent, child, i)) {
+                    && condition.isSameType(decorator, parent, child, i)) {
                 parent.getDecoratedBoundsWithMargins(child, bounds);
                 final int bottom = bounds.bottom + Math.round(child.getTranslationY());
                 final int top = bottom - getIntrinsicHeight(typeIndex);
@@ -81,7 +93,7 @@ abstract class AbstractDecoration implements Decoration {
         canvas.restore();
     }
 
-    private void drawVertical(@NonNull TypeDecoration decoration,
+    private void drawVertical(@NonNull Decorator decorator,
                               @NonNull Canvas canvas, @NonNull RecyclerView parent) {
         canvas.save();
         final int left;
@@ -97,17 +109,17 @@ abstract class AbstractDecoration implements Decoration {
             right = parent.getWidth();
         }
 
-        final Condition condition = decoration.getCondition();
-        final Rect bounds = decoration.getBounds();
-        final int marginStart = decoration.getMarginStart() + getMarginStart();
-        final int marginEnd = decoration.getMarginEnd() + getMarginEnd();
+        final Condition condition = decorator.getCondition();
+        final Rect bounds = decorator.getBounds();
+        final int marginStart = decorator.getMarginStart() + getMarginStart();
+        final int marginEnd = decorator.getMarginEnd() + getMarginEnd();
         final int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
             final int viewType = DecorationUtils.viewTypeOf(parent, child);
             int typeIndex = condition.typeIndexOf(viewType);
             if (typeIndex >= 0
-                    && condition.isSameType(parent, child, i)) {
+                    && condition.isSameType(decorator, parent, child, i)) {
                 parent.getDecoratedBoundsWithMargins(child, bounds);
                 final int bottom = bounds.bottom + Math.round(child.getTranslationY());
                 final int top = bottom - getIntrinsicHeight(typeIndex);
@@ -118,18 +130,18 @@ abstract class AbstractDecoration implements Decoration {
     }
 
     @Override
-    public final void draw(@NonNull TypeDecoration decoration, @NonNull Canvas c,
+    public final void draw(@NonNull Decorator decorator, @NonNull Canvas c,
                            @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        if (decoration.getOrientation() == VERTICAL) {
-            drawVertical(decoration, c, parent);
-        } else if (decoration.getOrientation() == HORIZONTAL) {
-            drawHorizontal(decoration, c, parent);
+        if (getOrientation() == VERTICAL) {
+            drawVertical(decorator, c, parent);
+        } else if (getOrientation() == HORIZONTAL) {
+            drawHorizontal(decorator, c, parent);
         } else {
-            drawOtherOrientation(decoration, c, parent, state);
+            drawOtherOrientation(decorator, c, parent, state);
         }
     }
 
-    protected void drawOtherOrientation(@NonNull TypeDecoration decoration, @NonNull Canvas c,
+    protected void drawOtherOrientation(@NonNull Decorator decoration, @NonNull Canvas c,
                                         @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
 
     }

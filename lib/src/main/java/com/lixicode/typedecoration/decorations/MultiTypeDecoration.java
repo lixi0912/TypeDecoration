@@ -8,7 +8,7 @@ import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.widget.RecyclerView;
 
 import com.lixicode.typedecoration.Decoration;
-import com.lixicode.typedecoration.TypeDecoration;
+import com.lixicode.typedecoration.Decorator;
 
 /**
  * @author 陈晓辉
@@ -16,17 +16,17 @@ import com.lixicode.typedecoration.TypeDecoration;
  * @date 2017/9/19
  */
 
-public class MultiDecoration extends AbstractDecoration {
+public class MultiTypeDecoration extends AbstractDecoration {
 
     private final SparseArrayCompat<Decoration> arrays = new SparseArrayCompat<>();
 
     @Override
-    public void registerTypeDraw(int typeIndex, Drawable drawable) {
+    public void registerDrawable(int typeIndex, Drawable drawable) {
         Decoration decoration = arrays.get(typeIndex);
         if (null == decoration) {
             arrays.put(typeIndex, new SingleLinearDecoration(drawable));
         } else {
-            decoration.registerTypeDraw(typeIndex, drawable);
+            decoration.registerDrawable(typeIndex, drawable);
         }
     }
 
@@ -45,7 +45,7 @@ public class MultiDecoration extends AbstractDecoration {
     }
 
     @Override
-    protected void drawOtherOrientation(@NonNull TypeDecoration decoration,
+    protected void drawOtherOrientation(@NonNull Decorator decoration,
                                         @NonNull Canvas c,
                                         @NonNull RecyclerView parent,
                                         @NonNull RecyclerView.State state) {

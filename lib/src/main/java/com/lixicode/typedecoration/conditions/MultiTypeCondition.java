@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.lixicode.typedecoration.Condition;
+import com.lixicode.typedecoration.Decorator;
 
 import java.util.Arrays;
 
@@ -43,17 +44,20 @@ public class MultiTypeCondition implements Condition {
      * @param index  the index to draw
      */
     @Override
-    public boolean isSameType(RecyclerView parent, View child, int index) {
+    public boolean isSameType(Decorator decorator, RecyclerView parent, View child, int index) {
         SparseArrayCompat<int[]> typeArray = this.typeArray;
         final int childCount = parent.getChildCount();
         if (index == childCount - 1)
             return true;
+
         final int position = parent.getChildAdapterPosition(child);
+
         final int viewType = parent.getAdapter().getItemViewType(position);
         final int nextType = parent.getAdapter().getItemViewType(position + 1);
         if (viewType == nextType)
             return true;
         int typeIndex = typeIndexOf(viewType);
-        return typeIndex > 0 && findType(typeArray.valueAt(typeIndex), nextType);
+        return typeIndex >= 0 &&
+                (findType(typeArray.valueAt(typeIndex), nextType) || decorator.isDrawEnd());
     }
 }

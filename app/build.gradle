@@ -24,4 +24,9 @@ dependencies {
     compile "com.android.support:appcompat-v7:${SDK_VERSION}"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile project(':lib')
+
+    compile ('com.alibaba.android:vlayout:1.2.2@aar') {
+        transitive = true
+    }
+
 }

@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.lixicode.typedecoration.Condition;
+import com.lixicode.typedecoration.Decorator;
 
 import java.util.Arrays;
 
@@ -23,7 +24,8 @@ public class SingleTypeCondition implements Condition {
     }
 
     @Override
-    public boolean isSameType(RecyclerView parent, View child, int index) {
+    public boolean isSameType(Decorator decorator, RecyclerView parent,
+                              View child, int index) {
         return true;
     }
 }

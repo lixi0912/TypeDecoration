@@ -8,41 +8,43 @@ import android.support.annotation.NonNull;
  * @description <>
  * @date 2017/9/19
  */
-
 public interface RegisterFlow {
 
     interface WithCondition {
+        WithDecoration noCondition();
+
         WithDecoration condition(@NonNull Condition condition);
     }
 
     interface WithDecoration {
-        WithRegister decoration();
+        With decoration();
 
-        WithRegister decoration(@NonNull Decoration decoration);
+        With decoration(@NonNull Decoration decoration);
     }
 
-    interface WithRegister {
-        WithRegister register(int... types);
+    interface With {
+        With withType(int... viewTypes);
 
-        WithThen then();
+        With withMarginStart(int margin);
+
+        With withMarginEnd(int margin);
+
+        With withDrawOverlay(boolean drawOverlay);
+        With withDrawEnd(boolean drawEnd);
+        Then then();
     }
 
 
-    interface WithThen {
-        WithThen thenDrawable(int type, Drawable drawable);
+    interface Then {
+        Then thenDrawable(int viewType, Drawable drawable);
 
-        WithThen thenDecoration(int type, Decoration decoration);
+        Then thenDecoration(int viewType, Decoration decoration);
 
-        WithThen thenMarginStart(int margin);
-
-        WithThen thenMarginEnd(int margin);
-
-        WithThen thenDrawOverlay(boolean drawOverlay);
 
         End end();
     }
 
     interface End {
-        TypeDecoration build(int orientation);
+        Decorator build();
     }
 }

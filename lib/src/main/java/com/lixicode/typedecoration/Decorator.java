@@ -12,13 +12,13 @@ import com.lixicode.typedecoration.utils.DecorationUtils;
 
 /**
  * <pre>
- * TypeDecoration baseDecoration = TypeDecoration.multiAble(this,
- * TypeDecoration.VERTICAL);
+ * Decorator baseDecoration = Decorator.multiAble(this,
+ * Decorator.VERTICAL);
  * baseDecoration.setMarginStart(margin);
  * baseDecoration.setMarginEnd(margin);
  *
  * // post item baseDecoration - showDividers = middle
- * baseDecoration.register(
+ * baseDecoration.withType(
  *     DelegateAdapter.encodeViewType(0, postIndex),
  *     DelegateAdapter.encodeViewType(1, postIndex),
  *     DelegateAdapter.encodeViewType(2, postIndex),
@@ -26,20 +26,21 @@ import com.lixicode.typedecoration.utils.DecorationUtils;
  * );
  *
  * // top item baseDecoration - showDividers = middle
- * decorationEx.register(DelegateAdapter.encodeViewType(0, topIndex));
+ * decorationEx.withType(DelegateAdapter.encodeViewType(0, topIndex));
  * </pre>
  *
  * @author 陈晓辉
  * @description <>
  * @date 2017/9/5
  */
-public class TypeDecoration extends RecyclerView.ItemDecoration {
+public class Decorator extends RecyclerView.ItemDecoration {
 
     public static final int HORIZONTAL = LinearLayout.HORIZONTAL;
     public static final int VERTICAL = LinearLayout.VERTICAL;
+    public static final int OTHER = -1;
 
     /**
-     * Current orientation. Either {@link #HORIZONTAL} or {@link #VERTICAL}.
+     * Current orientation. Either {@link #HORIZONTAL} or {@link #VERTICAL}. or {@link #OTHER}
      */
     private int mOrientation;
     private final Rect mBounds = new Rect();
@@ -53,19 +54,28 @@ public class TypeDecoration extends RecyclerView.ItemDecoration {
     private int marginStart;
     private int marginEnd;
     private boolean drawOverlay;
+    private boolean drawEnd;
 
 
-    public static RegisterFlow.WithCondition create() {
-        return new TypeDecorationBuilder();
+    public static RegisterFlow.WithCondition newBuilder(int orientation) {
+        return new DecoratorBuilder(orientation);
     }
 
-    TypeDecoration(int orientation, @NonNull Condition condition,
-                   @Nullable Decoration decoration) {
+    Decorator(int orientation, @NonNull Condition condition,
+              @Nullable Decoration decoration) {
         this.condition = condition;
         this.baseDecoration = decoration;
         setOrientation(orientation);
     }
 
+
+    public boolean isDrawEnd() {
+        return drawEnd;
+    }
+
+    public void setDrawEnd(boolean drawEnd) {
+        this.drawEnd = drawEnd;
+    }
 
     public void setMarginStart(int marginStart) {
         this.marginStart = marginStart;

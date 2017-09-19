@@ -15,27 +15,13 @@ import android.support.v7.widget.RecyclerView;
 
 public interface Decoration {
 
-    void setMarginStart(int marginStart);
-
-    void setMarginEnd(int marginEnd);
-
-    int getMarginStart();
-
-    int getMarginEnd();
-
     /**
      * @param typeIndex the index of registered type array
      */
     void registerDecoration(int typeIndex, @Nullable Decoration decoration);
 
-    /**
-     * @param typeIndex the index of registered type array
-     */
-    @Nullable
-    Drawable getDrawable(int typeIndex);
 
-
-    void registerTypeDraw(int typeIndex, @Nullable Drawable drawable);
+    void registerDrawable(int typeIndex, @Nullable Drawable drawable);
 
     /**
      * @param typeIndex the index of registered type array
@@ -53,6 +39,26 @@ public interface Decoration {
      */
     int getIntrinsicHeight(int typeIndex);
 
-    void draw(@NonNull TypeDecoration decoration, @NonNull Canvas c,
+    void draw(@NonNull Decorator decoration, @NonNull Canvas c,
               @NonNull RecyclerView parent, @NonNull RecyclerView.State state);
+
+
+    /**
+     * @param typeIndex the index of registered type array
+     */
+    @Nullable
+    Drawable getDrawable(int typeIndex);
+
+    void setMarginStart(int marginStart);
+
+    void setMarginEnd(int marginEnd);
+
+    int getMarginStart();
+
+    int getMarginEnd();
+
+    void setOrientation(int orientation);
+
+    int getOrientation();
+
 }

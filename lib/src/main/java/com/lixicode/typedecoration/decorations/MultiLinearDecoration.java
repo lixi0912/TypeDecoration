@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.SparseArrayCompat;
 
 import com.lixicode.typedecoration.Decoration;
-import com.lixicode.typedecoration.TypeDecoration;
+import com.lixicode.typedecoration.Decorator;
 
 /**
  * @author 陈晓辉
@@ -20,7 +20,7 @@ public class MultiLinearDecoration extends AbstractDecoration {
     private final SparseArrayCompat<Drawable> arrays = new SparseArrayCompat<>();
 
     @Override
-    public void registerTypeDraw(int typeIndex, Drawable drawable) {
+    public void registerDrawable(int typeIndex, Drawable drawable) {
         arrays.put(typeIndex, drawable);
     }
 
@@ -49,7 +49,7 @@ public class MultiLinearDecoration extends AbstractDecoration {
     public void boundsOut(@NonNull Rect outRect, int direction, int typeIndex) {
         Drawable drawable = arrays.get(typeIndex);
         if (null != drawable) {
-            if (direction == TypeDecoration.VERTICAL) {
+            if (direction == Decorator.VERTICAL) {
                 outRect.set(0, 0, 0, drawable.getIntrinsicHeight());
             } else {
                 outRect.set(0, 0, drawable.getIntrinsicWidth(), 0);
