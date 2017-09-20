@@ -19,32 +19,46 @@ public interface RegisterFlow {
     interface WithDecoration {
         With decoration();
 
-        With decoration(@NonNull Decoration decoration);
+        WithIf decoration(@NonNull Decoration decoration);
+    }
+
+
+    interface If {
+        Then ifType(int... viewTypes);
+        Decorator build();
+    }
+
+
+    interface Then {
+        If thenDrawable(Drawable drawable);
+
+        If thenDecoration(Decoration decoration);
+
+        If then();
+
+        Decorator build();
+    }
+
+    interface WithIf extends With, If {
+        WithIf withMarginStart(int margin);
+
+        WithIf withMarginEnd(int margin);
+
+        WithIf withDrawOverlay(boolean drawOverlay);
+
+        WithIf withDrawEnd(boolean drawEnd);
     }
 
     interface With {
-        With withType(int... viewTypes);
-
         With withMarginStart(int margin);
 
         With withMarginEnd(int margin);
 
         With withDrawOverlay(boolean drawOverlay);
+
         With withDrawEnd(boolean drawEnd);
-        Then then();
-    }
 
-
-    interface Then {
-        Then thenDrawable(int viewType, Drawable drawable);
-
-        Then thenDecoration(int viewType, Decoration decoration);
-
-
-        End end();
-    }
-
-    interface End {
         Decorator build();
     }
+
 }

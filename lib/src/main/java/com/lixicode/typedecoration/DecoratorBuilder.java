@@ -13,20 +13,14 @@ import android.view.View;
  */
 
 class DecoratorBuilder implements RegisterFlow.WithCondition,
-        RegisterFlow.WithDecoration, RegisterFlow.With,
-        RegisterFlow.Then, RegisterFlow.End {
+        RegisterFlow.WithDecoration, RegisterFlow.WithIf {
 
 
     @NonNull
     private Condition condition;
 
-    @Nullable
-    private Decoration mDecoration;
+    private Decorator decorator;
 
-    private int marginStart;
-    private int marginEnd;
-    private boolean drawOverlay;
-    private boolean drawEnd;
     private int orientation;
 
     public DecoratorBuilder(int orientation) {
@@ -42,8 +36,8 @@ class DecoratorBuilder implements RegisterFlow.WithCondition,
     public RegisterFlow.WithDecoration noCondition() {
         this.condition = new Condition() {
             @Override
-            public void registerType(int[] types) {
-
+            public int registerType(int[] types) {
+                return 0;
             }
 
             @Override
@@ -65,78 +59,57 @@ class DecoratorBuilder implements RegisterFlow.WithCondition,
         return this;
     }
 
+
     @Override
-    public RegisterFlow.With decoration(@Nullable Decoration decoration) {
-        this.mDecoration = decoration;
+    public RegisterFlow.WithIf decoration(@Nullable Decoration decoration) {
+        Decorator decorator = new Decorator(condition, decoration);
+        decorator.setOrientation(orientation);
+        this.decorator = decorator;
         return this;
     }
 
     @Override
-    public RegisterFlow.With withType(int... types) {
-        condition.registerType(types);
-        return this;
+    public RegisterFlow.Then ifType(int... viewTypes) {
+        return new TypeBuilder(decorator).ifType(viewTypes);
     }
-
 
     @Override
     public RegisterFlow.With withMarginStart(int margin) {
-        this.marginStart = margin;
+        if (null != decorator) {
+            decorator.setMarginStart(margin);
+        }
         return this;
     }
 
     @Override
     public RegisterFlow.With withMarginEnd(int margin) {
-        this.marginEnd = margin;
+        if (null != decorator) {
+            decorator.setMarginEnd(margin);
+        }
         return this;
     }
 
     @Override
     public RegisterFlow.With withDrawOverlay(boolean drawOverlay) {
-        this.drawOverlay = drawOverlay;
+        if (null != decorator) {
+            decorator.setDrawOverlay(drawOverlay);
+        }
         return this;
     }
 
     @Override
     public RegisterFlow.With withDrawEnd(boolean drawEnd) {
-        this.drawEnd = drawEnd;
+        if (null != decorator) {
+            decorator.setDrawEnd(drawEnd);
+        }
         return this;
     }
 
-    @Override
-    public RegisterFlow.Then then() {
-        return this;
-    }
-
-    @Override
-    public RegisterFlow.Then thenDrawable(int viewType, Drawable drawable) {
-        final int typeIndex = condition.typeIndexOf(viewType);
-        if (null != mDecoration)
-            mDecoration.registerDrawable(typeIndex, drawable);
-        return this;
-    }
-
-    @Override
-    public RegisterFlow.Then thenDecoration(int viewType, Decoration decoration) {
-        decoration.setOrientation(orientation);
-        final int typeIndex = condition.typeIndexOf(viewType);
-        if (null != mDecoration)
-            mDecoration.registerDecoration(typeIndex, decoration);
-        return this;
-    }
-
-
-    @Override
-    public RegisterFlow.End end() {
-        return this;
-    }
 
     @Override
     public Decorator build() {
-        Decorator decoration = new Decorator(orientation, condition, mDecoration);
-        decoration.setMarginStart(marginStart);
-        decoration.setMarginEnd(marginEnd);
-        decoration.setDrawOverlay(drawOverlay);
-        decoration.setDrawEnd(drawEnd);
-        return decoration;
+        return decorator;
     }
+
+
 }

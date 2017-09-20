@@ -81,16 +81,15 @@ public class MainActivity extends AppCompatActivity {
                 .decoration(decoration)
                 .withDrawOverlay(true)
                 .withDrawEnd(true)
-                .withType(DelegateAdapterCompat.encodeViewType(0, index$1))
-                .withType(DelegateAdapterCompat.encodeViewType(0, index$2))
-                .withType(
+                .ifType(DelegateAdapterCompat.encodeViewType(0, index$1))
+                .then()
+                .ifType(DelegateAdapterCompat.encodeViewType(0, index$2))
+                .thenDrawable(DecorationUtils.listDivider(this))
+                .ifType(
                         DelegateAdapterCompat.encodeViewType(0, index$3),
                         DelegateAdapterCompat.encodeViewType(0, index$5)
                 )
-                .then()
-                .thenDrawable(DelegateAdapterCompat.encodeViewType(0, index$2), DecorationUtils.listDivider(this))
-                .thenDrawable(DelegateAdapterCompat.encodeViewType(0, index$5), ContextCompat.getDrawable(this, R.drawable.divider_vertical2))
-                .end()
+                .thenDrawable(ContextCompat.getDrawable(this, R.drawable.divider_vertical2))
                 .build();
 
         recyclerView.addItemDecoration(decorator);

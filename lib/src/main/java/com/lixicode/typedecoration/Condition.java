@@ -11,7 +11,11 @@ import android.view.View;
 
 public interface Condition {
 
-    void registerType(int[] types);
+    /**
+     * @param types the types of RecyclerView`s ViewHolder
+     * @return type index for type decoration array
+     */
+    int registerType(int[] types);
 
 
     /**

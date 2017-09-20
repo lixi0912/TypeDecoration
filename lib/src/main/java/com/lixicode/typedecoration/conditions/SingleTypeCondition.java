@@ -13,9 +13,10 @@ public class SingleTypeCondition implements Condition {
     private int[] types;
 
     @Override
-    public void registerType(int[] types) {
+    public int registerType(int[] types) {
         this.types = types;
         Arrays.sort(types);
+        return 0;
     }
 
     @Override

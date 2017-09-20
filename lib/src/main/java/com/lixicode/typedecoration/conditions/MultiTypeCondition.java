@@ -15,10 +15,12 @@ public class MultiTypeCondition implements Condition {
     private final SparseArrayCompat<int[]> typeArray = new SparseArrayCompat<>();
 
     @Override
-    public void registerType(int[] types) {
+    public int registerType(int[] types) {
         SparseArrayCompat<int[]> typeArray = this.typeArray;
-        typeArray.put(typeArray.size() + 1, types);
+        final int newIndex = typeArray.size();
+        typeArray.put(newIndex, types);
         Arrays.sort(types);
+        return newIndex;
     }
 
     @Override

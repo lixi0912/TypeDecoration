@@ -61,11 +61,10 @@ public class Decorator extends RecyclerView.ItemDecoration {
         return new DecoratorBuilder(orientation);
     }
 
-    Decorator(int orientation, @NonNull Condition condition,
+    Decorator( @NonNull Condition condition,
               @Nullable Decoration decoration) {
         this.condition = condition;
         this.baseDecoration = decoration;
-        setOrientation(orientation);
     }
 
 
@@ -91,6 +90,11 @@ public class Decorator extends RecyclerView.ItemDecoration {
 
     public Rect getBounds() {
         return mBounds;
+    }
+
+    @Nullable
+    Decoration getDecoration() {
+        return baseDecoration;
     }
 
     @NonNull
