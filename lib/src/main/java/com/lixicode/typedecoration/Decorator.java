@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.lixicode.typedecoration.utils.DecorationUtils;
 
@@ -33,16 +32,8 @@ import com.lixicode.typedecoration.utils.DecorationUtils;
  * @description <>
  * @date 2017/9/5
  */
-public class Decorator extends RecyclerView.ItemDecoration {
+public class Decorator extends RecyclerView.ItemDecoration implements Orientation {
 
-    public static final int HORIZONTAL = LinearLayout.HORIZONTAL;
-    public static final int VERTICAL = LinearLayout.VERTICAL;
-    public static final int OTHER = -1;
-
-    /**
-     * Current orientation. Either {@link #HORIZONTAL} or {@link #VERTICAL}. or {@link #OTHER}
-     */
-    private int mOrientation;
     private final Rect mBounds = new Rect();
 
     @NonNull
@@ -51,42 +42,19 @@ public class Decorator extends RecyclerView.ItemDecoration {
     @Nullable
     private final Decoration baseDecoration;
 
-    private int marginStart;
-    private int marginEnd;
     private boolean drawOverlay;
-    private boolean drawEnd;
 
 
-    public static RegisterFlow.WithCondition newBuilder(int orientation) {
-        return new DecoratorBuilder(orientation);
+    public static DecoratorFlow.WithCondition newBuilder() {
+        return new DecoratorBuilder();
     }
 
-    Decorator( @NonNull Condition condition,
+    Decorator(@NonNull Condition condition,
               @Nullable Decoration decoration) {
         this.condition = condition;
         this.baseDecoration = decoration;
     }
 
-
-    public boolean isDrawEnd() {
-        return drawEnd;
-    }
-
-    public void setDrawEnd(boolean drawEnd) {
-        this.drawEnd = drawEnd;
-    }
-
-    public void setMarginStart(int marginStart) {
-        this.marginStart = marginStart;
-    }
-
-    public void setMarginEnd(int marginEnd) {
-        this.marginEnd = marginEnd;
-    }
-
-    public int getOrientation() {
-        return mOrientation;
-    }
 
     public Rect getBounds() {
         return mBounds;
@@ -100,29 +68,6 @@ public class Decorator extends RecyclerView.ItemDecoration {
     @NonNull
     public Condition getCondition() {
         return condition;
-    }
-
-    public int getMarginStart() {
-        return marginStart;
-    }
-
-    public int getMarginEnd() {
-        return marginEnd;
-    }
-
-
-    /**
-     * Sets the orientation for this divider. This should be called if
-     * {@link RecyclerView.LayoutManager} changes orientation.
-     *
-     * @param orientation {@link #HORIZONTAL} or {@link #VERTICAL}
-     */
-    public void setOrientation(int orientation) {
-        if (orientation != HORIZONTAL && orientation != VERTICAL) {
-            throw new IllegalArgumentException(
-                    "Invalid orientation. It should be either HORIZONTAL or VERTICAL");
-        }
-        mOrientation = orientation;
     }
 
     public void setDrawOverlay(boolean overlay) {
@@ -152,13 +97,21 @@ public class Decorator extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                                RecyclerView.State state) {
         final int typeIndex = condition.typeIndexOf(DecorationUtils.viewTypeOf(parent, view));
-        Decoration typeDrawable = this.baseDecoration;
-        if (typeDrawable == null || typeIndex == -1 || drawOverlay) {
+        Decoration decoration = this.baseDecoration;
+        if (decoration == null || typeIndex == -1 || drawOverlay) {
             outRect.setEmpty();
             return;
         }
-        typeDrawable.boundsOut(outRect, mOrientation, typeIndex);
+        decoration.boundsOut(outRect, typeIndex);
     }
 
 
+    public boolean isDrawEnd(int typeIndex) {
+        Decoration decoration = this.baseDecoration;
+        if (null == decoration) {
+            return false;
+        }
+        decoration = decoration.searchDecoration(typeIndex);
+        return null != decoration && decoration.isDrawEnd();
+    }
 }

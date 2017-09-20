@@ -59,7 +59,6 @@ public class MultiTypeCondition implements Condition {
         if (viewType == nextType)
             return true;
         int typeIndex = typeIndexOf(viewType);
-        return typeIndex >= 0 &&
-                (findType(typeArray.valueAt(typeIndex), nextType) || decorator.isDrawEnd());
+        return typeIndex >= 0 && findType(typeArray.valueAt(typeIndex), nextType);
     }
 }

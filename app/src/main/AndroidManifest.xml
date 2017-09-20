@@ -16,6 +16,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".VLayoutActivity"
+            android:label="VLayoutDemo" />
+
+        <activity
+            android:name=".LayoutMangerActivity"
+            android:label="LayoutMangerDemo" />
     </application>
 
 </manifest>

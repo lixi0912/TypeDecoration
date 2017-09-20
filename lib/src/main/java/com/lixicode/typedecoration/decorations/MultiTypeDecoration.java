@@ -5,10 +5,8 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.util.SparseArrayCompat;
-import android.support.v7.widget.RecyclerView;
 
 import com.lixicode.typedecoration.Decoration;
-import com.lixicode.typedecoration.Decorator;
 
 /**
  * @author 陈晓辉
@@ -21,13 +19,15 @@ public class MultiTypeDecoration extends AbstractDecoration {
     private final SparseArrayCompat<Decoration> arrays = new SparseArrayCompat<>();
 
     @Override
-    public void registerDrawable(int typeIndex, Drawable drawable) {
+    public Decoration registerDrawable(int typeIndex, Drawable drawable) {
         Decoration decoration = arrays.get(typeIndex);
         if (null == decoration) {
-            arrays.put(typeIndex, new SingleLinearDecoration(drawable));
+            decoration = new LinearDecoration(drawable);
+            arrays.put(typeIndex, decoration);
         } else {
             decoration.registerDrawable(typeIndex, drawable);
         }
+        return decoration;
     }
 
     @Override
@@ -40,35 +40,40 @@ public class MultiTypeDecoration extends AbstractDecoration {
     }
 
     @Override
+    public Decoration searchDecoration(int typeIndex) {
+        return arrays.get(typeIndex);
+    }
+
+    @Override
     public void registerDecoration(int typeIndex, Decoration decoration) {
         arrays.put(typeIndex, decoration);
     }
 
     @Override
-    protected void drawOtherOrientation(@NonNull Decorator decoration,
-                                        @NonNull Canvas c,
-                                        @NonNull RecyclerView parent,
-                                        @NonNull RecyclerView.State state) {
-        //TODO GridLayoutManger
-        //TODO StaggeredGridLayoutManager
-    }
-
-    @Override
-    public void draw(@NonNull Canvas canvas, int typeIndex, int left, int top, int right, int bottom) {
-        Decoration decoration = arrays.get(typeIndex);
+    public void draw(@NonNull Canvas canvas, boolean isSameType, int typeIndex, int left, int top, int right, int bottom, int parentRight) {
+        Decoration decoration = arrays.get(parentRight);
         if (null != decoration) {
-            decoration.draw(canvas, typeIndex, left, top, right, bottom);
+            decoration.draw(canvas, isSameType, typeIndex, left, top, right, bottom, parentRight);
         }
     }
 
     @Override
-    public void boundsOut(@NonNull Rect outRect, int direction, int typeIndex) {
+    public void boundsOut(@NonNull Rect outRect, int typeIndex) {
         Decoration decoration = arrays.get(typeIndex);
         if (null != decoration) {
-            decoration.boundsOut(outRect, direction, typeIndex);
+            decoration.boundsOut(outRect, typeIndex);
         } else {
             outRect.setEmpty();
         }
+    }
+
+    @Override
+    public int getIntrinsicWidth(int typeIndex) {
+        Decoration decoration = arrays.get(typeIndex);
+        if (null != decoration) {
+            return decoration.getIntrinsicWidth(typeIndex);
+        }
+        return 0;
     }
 
     @Override

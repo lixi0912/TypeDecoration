@@ -15,13 +15,19 @@ import com.lixicode.typedecoration.Decorator;
  * @date 2017/9/19
  */
 
-public class MultiLinearDecoration extends AbstractDecoration {
+public class MultiDrawableDecoration extends AbstractDecoration {
 
     private final SparseArrayCompat<Drawable> arrays = new SparseArrayCompat<>();
 
     @Override
-    public void registerDrawable(int typeIndex, Drawable drawable) {
+    public Decoration registerDrawable(int typeIndex, Drawable drawable) {
         arrays.put(typeIndex, drawable);
+        return this;
+    }
+
+    @Override
+    public Decoration searchDecoration(int typeIndex) {
+        return this;
     }
 
     @Override
@@ -36,20 +42,36 @@ public class MultiLinearDecoration extends AbstractDecoration {
         return arrays.get(typeIndex);
     }
 
+
     @Override
-    public void draw(@NonNull Canvas canvas, int typeIndex, int left, int top, int right, int bottom) {
-        Drawable drawable = arrays.get(typeIndex);
+    public void draw(@NonNull Canvas canvas, boolean isSameType, int typeIndex, int left, int top, int right, int bottom, int parentRight) {
+        Drawable drawable = arrays.get(parentRight);
         if (null != drawable) {
-            drawable.setBounds(left, top, right, bottom);
+
+            final int marginStart;
+            final int marginEnd;
+            if (isSameType) {
+                marginStart = getMarginStart();
+                marginEnd = getMarginEnd();
+            } else {
+                marginStart = 0;
+                marginEnd = 0;
+            }
+            if (getOrientation() == VERTICAL) {
+                drawable.setBounds(left + marginStart, top, right - marginEnd, bottom);
+            } else {
+                drawable.setBounds(left, top + marginStart, right, bottom - marginEnd);
+            }
+
             drawable.draw(canvas);
         }
     }
 
     @Override
-    public void boundsOut(@NonNull Rect outRect, int direction, int typeIndex) {
+    public void boundsOut(@NonNull Rect outRect, int typeIndex) {
         Drawable drawable = arrays.get(typeIndex);
         if (null != drawable) {
-            if (direction == Decorator.VERTICAL) {
+            if (getOrientation() == Decorator.VERTICAL) {
                 outRect.set(0, 0, 0, drawable.getIntrinsicHeight());
             } else {
                 outRect.set(0, 0, drawable.getIntrinsicWidth(), 0);
@@ -57,6 +79,15 @@ public class MultiLinearDecoration extends AbstractDecoration {
         } else {
             outRect.setEmpty();
         }
+    }
+
+    @Override
+    public int getIntrinsicWidth(int typeIndex) {
+        Drawable drawable = arrays.get(typeIndex);
+        if (null != drawable) {
+            return drawable.getIntrinsicWidth();
+        }
+        return 0;
     }
 
     @Override

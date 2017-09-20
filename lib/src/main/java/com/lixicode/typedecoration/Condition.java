@@ -13,7 +13,7 @@ public interface Condition {
 
     /**
      * @param types the types of RecyclerView`s ViewHolder
-     * @return type index for type decoration array
+     * @return type index for type noDecoration array
      */
     int registerType(int[] types);
 
