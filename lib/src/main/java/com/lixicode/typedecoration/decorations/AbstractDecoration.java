@@ -1,3 +1,18 @@
+/*
+ * Copyright 2017 lixi0912@gmail.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.lixicode.typedecoration.decorations;
 
 import android.graphics.Canvas;
@@ -17,7 +32,6 @@ import com.lixicode.typedecoration.utils.DecorationUtils;
  * @description <>
  * @date 2017/9/19
  */
-
 abstract class AbstractDecoration implements Decoration, DecorationParent {
     private int orientation;
     private int marginStart;
@@ -93,6 +107,8 @@ abstract class AbstractDecoration implements Decoration, DecorationParent {
         final Condition condition = decorator.getCondition();
         final Rect bounds = decorator.getBounds();
         for (int i = index; i < childCount; i++) {
+            index = i;
+
             final View child = parent.getChildAt(i);
             final int viewType = DecorationUtils.viewTypeOf(parent, child);
             final int typeIndex = condition.typeIndexOf(viewType);
@@ -102,12 +118,11 @@ abstract class AbstractDecoration implements Decoration, DecorationParent {
                 final int right = bounds.right + Math.round(child.getTranslationX());
                 final int left = right - getIntrinsicWidth(typeIndex);
                 draw(canvas, isSameType, typeIndex, left, top, right, bottom, right);
-                index = i;
                 if (!isSameType) {
-                    return index;
+                    break ;
                 }
             } else {
-                return index;
+                break;
             }
         }
         return index;
@@ -133,6 +148,8 @@ abstract class AbstractDecoration implements Decoration, DecorationParent {
         final Condition condition = decorator.getCondition();
         final Rect bounds = decorator.getBounds();
         for (int i = index; i < childCount; i++) {
+            index = i;
+
             final View child = parent.getChildAt(i);
             final int viewType = DecorationUtils.viewTypeOf(parent, child);
             final int typeIndex = condition.typeIndexOf(viewType);
@@ -142,12 +159,11 @@ abstract class AbstractDecoration implements Decoration, DecorationParent {
                 final int bottom = bounds.bottom + Math.round(child.getTranslationY());
                 final int top = bottom - getIntrinsicHeight(typeIndex);
                 draw(canvas, isSameType, typeIndex, left, top, right, bottom, right);
-                index = i;
                 if (!isSameType) {
-                    return index;
+                    break;
                 }
             } else {
-                return index;
+                break;
             }
         }
         return index;
@@ -164,6 +180,10 @@ abstract class AbstractDecoration implements Decoration, DecorationParent {
                 final View child = parent.getChildAt(i);
                 final int viewType = DecorationUtils.viewTypeOf(parent, child);
                 final int typeIndex = condition.typeIndexOf(viewType);
+                if (typeIndex < 0) {
+                    i += 1;
+                    continue;
+                }
                 Decoration decoration = searchDecoration(typeIndex);
                 if (null == decoration) {
                     i += 1;
