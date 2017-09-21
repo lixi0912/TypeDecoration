@@ -27,6 +27,12 @@ public class SingleTypeCondition implements Condition {
     @Override
     public boolean isSameType(Decorator decorator, RecyclerView parent,
                               View child, int index) {
-        return true;
+        final int position = parent.getChildAdapterPosition(child);
+
+        final int viewType = parent.getAdapter().getItemViewType(position);
+        final int nextType = parent.getAdapter().getItemViewType(position + 1);
+
+        return viewType == nextType || typeIndexOf(viewType) >= 0
+                && typeIndexOf(nextType) >= 0;
     }
 }
