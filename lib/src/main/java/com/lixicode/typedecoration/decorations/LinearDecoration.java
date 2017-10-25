@@ -26,6 +26,9 @@ import com.lixicode.typedecoration.Decoration;
 import com.lixicode.typedecoration.Decorator;
 import com.lixicode.typedecoration.utils.DecorationUtils;
 
+import java.lang.annotation.Annotation;
+
+
 /**
  * @author 陈晓辉
  * @description <>
@@ -111,7 +114,7 @@ public class LinearDecoration extends AbstractDecoration {
             return;
         }
 
-        if (getOrientation() == Decorator.VERTICAL) {
+        if (getOrientation() == VERTICAL) {
             outRect.set(0, 0, 0, drawable.getIntrinsicHeight());
         } else {
             outRect.set(0, 0, drawable.getIntrinsicWidth(), 0);

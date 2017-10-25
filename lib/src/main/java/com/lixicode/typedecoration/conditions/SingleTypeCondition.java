@@ -36,6 +36,9 @@ public class SingleTypeCondition implements Condition {
 
     @Override
     public int typeIndexOf(int viewType) {
+        if (null == types) {
+            return -1;
+        }
         return Arrays.binarySearch(this.types, viewType);
     }
 

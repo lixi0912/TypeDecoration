@@ -36,8 +36,15 @@ import com.lixicode.typedecoration.utils.DecorationUtils;
  */
 public class GridDecoration extends AbstractDecoration {
 
+    public static final int DRAW_RIGHT = 1 << 1;
+    public static final int DRAW_BOTTOM = 1 << 2;
+    public static final int DRAW_DEFAULT = DRAW_RIGHT | DRAW_BOTTOM;
+
+
     @Nullable
     private Drawable drawable;
+
+    private int flag;
 
     /**
      * a drawable for recycler noDecoration
@@ -47,11 +54,17 @@ public class GridDecoration extends AbstractDecoration {
     public GridDecoration(Context context) {
         this(DecorationUtils.listDivider(context));
         setOrientation(OTHER);
+        setFlag(DRAW_DEFAULT);
     }
 
     public GridDecoration(@Nullable Drawable drawable) {
         this.drawable = drawable;
         setOrientation(OTHER);
+        setFlag(DRAW_DEFAULT);
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 
     @Override
@@ -149,12 +162,17 @@ public class GridDecoration extends AbstractDecoration {
 //        }
 
         // TODO can`t skip last row
-        drawable.setBounds(left + marginStart, bottom - getIntrinsicHeight(parentRight), right - marginEnd, bottom);
-        drawable.draw(canvas);
-
-        if (right != parentRight) {
-            drawable.setBounds(right - getIntrinsicWidth(parentRight), top + marginStart, right, bottom - marginEnd);
+        if (DecorationUtils.hasFlag(flag, DRAW_BOTTOM)) {
+            drawable.setBounds(left + marginStart, bottom - getIntrinsicHeight(parentRight), right - marginEnd, bottom);
             drawable.draw(canvas);
+        }
+
+
+        if (DecorationUtils.hasFlag(flag, DRAW_RIGHT)) {
+            if (right != parentRight) {
+                drawable.setBounds(right - getIntrinsicWidth(parentRight), top + marginStart, right, bottom - marginEnd);
+                drawable.draw(canvas);
+            }
         }
     }
 

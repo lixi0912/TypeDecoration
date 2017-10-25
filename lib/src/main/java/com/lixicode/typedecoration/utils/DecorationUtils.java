@@ -47,4 +47,9 @@ public final class DecorationUtils {
         a.recycle();
         return drawable;
     }
+
+    public static boolean hasFlag(int originFlag, int checkFlag) {
+        return originFlag == checkFlag || (originFlag & checkFlag) == checkFlag;
+    }
+
 }
