@@ -32,13 +32,13 @@ import com.lixicode.typedecoration.utils.DecorationUtils;
  * @description <>
  * @date 2017/9/19
  */
-abstract class AbstractDecoration implements Decoration, DecorationParent {
+public abstract class AbstractDecoration implements Decoration, DecorationParent {
     private int orientation;
     private int marginStart;
     private int marginEnd;
     private boolean drawEnd;
 
-    AbstractDecoration() {
+    public AbstractDecoration() {
         this.orientation = VERTICAL;
     }
 

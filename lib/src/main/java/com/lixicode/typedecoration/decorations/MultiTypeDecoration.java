@@ -20,8 +20,11 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.util.SparseArrayCompat;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.lixicode.typedecoration.Decoration;
+import com.lixicode.typedecoration.Decorator;
 
 /**
  * @author 陈晓辉
@@ -73,10 +76,10 @@ public class MultiTypeDecoration extends AbstractDecoration {
     }
 
     @Override
-    public void boundsOut(@NonNull Rect outRect, int typeIndex) {
+    public void boundsOut(Decorator decorator, RecyclerView parent, View view, RecyclerView.State state, @NonNull Rect outRect, int typeIndex) {
         Decoration decoration = arrays.get(typeIndex);
         if (null != decoration) {
-            decoration.boundsOut(outRect, typeIndex);
+            decoration.boundsOut(decorator, parent, view, state, outRect, typeIndex);
         } else {
             outRect.setEmpty();
         }

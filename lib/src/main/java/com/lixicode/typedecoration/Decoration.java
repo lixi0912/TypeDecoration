@@ -21,6 +21,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 /**
  * @author 陈晓辉
@@ -51,9 +52,13 @@ public interface Decoration extends Orientation {
 
 
     /**
+     * @param decorator
+     * @param parent
+     * @param view
+     * @param state
      * @param typeIndex the index of registered type array
      */
-    void boundsOut(@NonNull Rect outRect, int typeIndex);
+    void boundsOut(Decorator decorator, RecyclerView parent, View view, RecyclerView.State state, @NonNull Rect outRect, int typeIndex);
 
     /**
      * @param typeIndex the index of registered type array

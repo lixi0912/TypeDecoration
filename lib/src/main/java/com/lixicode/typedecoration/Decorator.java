@@ -33,14 +33,14 @@ import com.lixicode.typedecoration.utils.DecorationUtils;
  *
  * // post item baseDecoration - showDividers = middle
  * baseDecoration.withType(
- *     DelegateAdapter.encodeViewType(0, postIndex),
- *     DelegateAdapter.encodeViewType(1, postIndex),
- *     DelegateAdapter.encodeViewType(2, postIndex),
- *     DelegateAdapter.encodeViewType(3, postIndex)
+ *     (int) CantorPairFunctions.process(0, postIndex),
+ *     (int) CantorPairFunctions.process(1, postIndex),
+ *     (int) CantorPairFunctions.process(2, postIndex),
+ *     (int) CantorPairFunctions.process(3, postIndex)
  * );
  *
  * // top item baseDecoration - showDividers = middle
- * decorationEx.withType(DelegateAdapter.encodeViewType(0, topIndex));
+ * decorationEx.withType((int) CantorPairFunctions.process(0, topIndex));
  * </pre>
  *
  * @author 陈晓辉
@@ -108,19 +108,21 @@ public class Decorator extends RecyclerView.ItemDecoration implements Orientatio
     }
 
 
-
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                                RecyclerView.State state) {
         final int typeIndex = condition.typeIndexOf(DecorationUtils.viewTypeOf(parent, view));
         Decoration decoration = this.baseDecoration;
-        if (decoration == null || typeIndex == -1 || drawOverlay) {
+        if (decoration == null || typeIndex == -1) {
             outRect.setEmpty();
             return;
         }
-        decoration.boundsOut(outRect, typeIndex);
+        decoration.boundsOut(this, parent, view, state, outRect, typeIndex);
     }
 
+    public boolean isDrawOverlay() {
+        return drawOverlay;
+    }
 
     public boolean isDrawEnd(int typeIndex) {
         Decoration decoration = this.baseDecoration;

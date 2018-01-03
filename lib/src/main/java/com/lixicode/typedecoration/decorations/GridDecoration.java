@@ -177,7 +177,7 @@ public class GridDecoration extends AbstractDecoration {
     }
 
     @Override
-    public void boundsOut(@NonNull Rect outRect, int typeIndex) {
+    public void boundsOut(Decorator decorator, RecyclerView parent, View view, RecyclerView.State state, @NonNull Rect outRect, int typeIndex) {
         outRect.setEmpty();
     }
 

@@ -21,12 +21,12 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.lixicode.typedecoration.Decoration;
 import com.lixicode.typedecoration.Decorator;
 import com.lixicode.typedecoration.utils.DecorationUtils;
-
-import java.lang.annotation.Annotation;
 
 
 /**
@@ -108,7 +108,7 @@ public class LinearDecoration extends AbstractDecoration {
     }
 
     @Override
-    public void boundsOut(@NonNull Rect outRect, int typeIndex) {
+    public void boundsOut(Decorator decorator, RecyclerView parent, View view, RecyclerView.State state, @NonNull Rect outRect, int typeIndex) {
         Drawable drawable = this.drawable;
         if (null == drawable) {
             return;
