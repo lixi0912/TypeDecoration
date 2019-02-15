@@ -25,16 +25,12 @@ import android.support.annotation.NonNull;
  */
 public interface DecoratorFlow {
 
-    interface WithCondition {
-        WithDecoration noCondition();
+    interface Creator {
 
-        WithDecoration condition(@NonNull Condition condition);
-    }
+        Then simple();
 
-    interface WithDecoration {
-        With noDecoration();
+        Then multi(int... viewTypes);
 
-        WithIf decoration(@NonNull Decoration decoration);
     }
 
 
@@ -44,11 +40,7 @@ public interface DecoratorFlow {
 
 
     interface Then extends End {
-        AndIf thenDrawable(Drawable drawable);
-
         AndIf thenDecoration(Decoration decoration);
-
-        If thenNothing();
     }
 
     interface AndIf extends If {
@@ -59,14 +51,6 @@ public interface DecoratorFlow {
         AndIf andMarginEnd(int margin);
 
         AndIf andOrientation(int orientation);
-    }
-
-    interface With extends End {
-        With withDrawOverlay(boolean drawOverlay);
-    }
-
-    interface WithIf extends With, If {
-        WithIf withDrawOverlay(boolean drawOverlay);
     }
 
 

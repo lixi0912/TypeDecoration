@@ -19,10 +19,9 @@ import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
 import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
 import com.lixicode.typedecoration.Decorator;
-import com.lixicode.typedecoration.conditions.MultiTypeCondition;
-import com.lixicode.typedecoration.decorations.GridDecoration;
-import com.lixicode.typedecoration.decorations.MultiTypeDecoration;
-import com.lixicode.typedecoration.utils.DecorationUtils;
+import com.lixicode.typedecoration.DecoratorFactory;
+import com.lixicode.typedecoration.decoration.GridDecoration;
+import com.lixicode.typedecoration.decoration.LinearDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,43 +84,35 @@ public class VLayoutActivity extends AppCompatActivity {
         adapters.add(new SubAdapter(this, layout$7, 5));
 
 
-
         delegateAdapter.setAdapters(adapters);
         recyclerView.setAdapter(delegateAdapter);
 
 
-        MultiTypeDecoration decoration = new MultiTypeDecoration();
         int margin = getResources().getDimensionPixelSize(R.dimen.margin);
 
-        Decorator decorator = Decorator.newBuilder()
-                .condition(new MultiTypeCondition())
-                .decoration(decoration)
-                .withDrawOverlay(true)
+        Decorator decorator = DecoratorFactory.newBuilder()
+                .multi(
+                        DelegateAdapterCompat.encodeViewType(0, index$4)
+                )
+                .thenDecoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2), 3))
+                .andMarginEnd(margin)
+                .andMarginStart(margin)
+                .andDrawEnd(true)
                 .ifType(
-                        DelegateAdapterCompat.encodeViewType(0, index$4),
                         DelegateAdapterCompat.encodeViewType(0, index$6),
                         DelegateAdapterCompat.encodeViewType(0, index$7)
                 )
-                .thenDecoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2)))
-                .andMarginEnd(margin)
-                .andMarginStart(margin)
-                .andDrawEnd(true)
+                .thenDecoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2), 5))
                 .ifType(DelegateAdapterCompat.encodeViewType(0, index$0))
-                .thenDrawable(ContextCompat.getDrawable(this, R.drawable.divider_vertical2))
+                .thenDecoration(new LinearDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2)))
                 .andMarginStart(margin)
                 .andMarginEnd(margin)
-                .ifType(DelegateAdapterCompat.encodeViewType(0, index$1))
-                .thenNothing()
-                .ifType(DelegateAdapterCompat.encodeViewType(0, index$2))
-                .thenDrawable(DecorationUtils.listDivider(this))
                 .ifType(
+                        DelegateAdapterCompat.encodeViewType(0, index$2),
                         DelegateAdapterCompat.encodeViewType(0, index$3),
                         DelegateAdapterCompat.encodeViewType(0, index$5)
                 )
-                .thenDrawable(ContextCompat.getDrawable(this, R.drawable.divider_vertical2))
-                .andDrawEnd(true)
-                .andMarginStart(margin)
-                .andMarginEnd(margin)
+                .thenDecoration(new LinearDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2)))
                 .end();
 
         recyclerView.addItemDecoration(decorator);

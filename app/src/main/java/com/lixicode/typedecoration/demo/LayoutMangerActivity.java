@@ -11,10 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.lixicode.typedecoration.Decorator;
-import com.lixicode.typedecoration.conditions.MultiTypeCondition;
-import com.lixicode.typedecoration.decorations.GridDecoration;
-import com.lixicode.typedecoration.decorations.MultiTypeDecoration;
-import com.lixicode.typedecoration.utils.DecorationUtils;
+import com.lixicode.typedecoration.DecoratorFactory;
+import com.lixicode.typedecoration.decoration.GridDecoration;
 
 /**
  * @author 陈晓辉
@@ -47,10 +45,10 @@ public class LayoutMangerActivity extends AppCompatActivity {
             }
         });
 
-        Decorator decorator = Decorator.newBuilder()
-                .noCondition()
-                .decoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2)))
-                .withDrawOverlay(true)
+        Decorator decorator = DecoratorFactory
+                .newBuilder()
+                .simple()
+                .thenDecoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2), 3))
                 .end();
 
         recyclerView.addItemDecoration(decorator);

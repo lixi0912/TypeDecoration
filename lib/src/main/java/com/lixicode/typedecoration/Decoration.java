@@ -29,56 +29,12 @@ import android.view.View;
  * @date 2017/9/19
  */
 
-public interface Decoration extends Orientation {
-
-    /**
-     * @param typeIndex the index of registered type array
-     */
-    Decoration searchDecoration(int typeIndex);
-
-    /**
-     * @param typeIndex the index of registered type array
-     */
-    void registerDecoration(int typeIndex, @Nullable Decoration decoration);
+public interface Decoration {
 
 
-    Decoration registerDrawable(int typeIndex, @Nullable Drawable drawable);
+    void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state);
 
-    /**
-     * @param isSameType true if hasConsistItemType or has same type with next item
-     * @param typeIndex  the index of registered type array
-     */
-    void draw(@NonNull Canvas canvas, boolean isSameType, int typeIndex, int left, int top, int right, int bottom, int parentRight);
-
-
-    /**
-     * @param decorator
-     * @param parent
-     * @param view
-     * @param state
-     * @param typeIndex the index of registered type array
-     */
-    void boundsOut(Decorator decorator, RecyclerView parent, View view, RecyclerView.State state, @NonNull Rect outRect, int typeIndex);
-
-    /**
-     * @param typeIndex the index of registered type array
-     */
-    int getIntrinsicHeight(int typeIndex);
-
-    /**
-     * @param typeIndex the index of registered type array
-     */
-    int getIntrinsicWidth(int typeIndex);
-
-    void draw(@NonNull Decorator decorator, @NonNull Canvas canvas,
-              @NonNull RecyclerView parent, @NonNull RecyclerView.State state);
-
-
-    /**
-     * @param typeIndex the index of registered type array
-     */
-    @Nullable
-    Drawable getDrawable(int typeIndex);
+    void onDraw(Decorator decorator, Canvas c, View child, RecyclerView parent, RecyclerView.State state);
 
     void setMarginStart(int marginStart);
 
@@ -96,4 +52,7 @@ public interface Decoration extends Orientation {
 
     boolean isDrawEnd();
 
+    Range getRange();
+
+    void setRange(Range range);
 }

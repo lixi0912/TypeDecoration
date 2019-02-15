@@ -17,12 +17,8 @@ package com.lixicode.typedecoration;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
-import com.lixicode.typedecoration.utils.DecorationUtils;
 
 /**
  * <pre>
@@ -47,89 +43,67 @@ import com.lixicode.typedecoration.utils.DecorationUtils;
  * @description <>
  * @date 2017/9/5
  */
-public class Decorator extends RecyclerView.ItemDecoration implements Orientation {
+public class Decorator extends RecyclerView.ItemDecoration {
 
+
+    private final DecorationManager mDecorations;
     private final Rect mBounds = new Rect();
 
-    @NonNull
-    private final Condition condition;
-
-    @Nullable
-    private final Decoration baseDecoration;
-
-    private boolean drawOverlay;
-
-
-    public static DecoratorFlow.WithCondition newBuilder() {
-        return new DecoratorBuilder();
+    public Decorator(DecorationManager decorations) {
+        this.mDecorations = decorations;
     }
-
-    Decorator(@NonNull Condition condition,
-              @Nullable Decoration decoration) {
-        this.condition = condition;
-        this.baseDecoration = decoration;
-    }
-
 
     public Rect getBounds() {
         return mBounds;
     }
 
-    @Nullable
-    Decoration getDecoration() {
-        return baseDecoration;
-    }
-
-    @NonNull
-    public Condition getCondition() {
-        return condition;
-    }
-
-    public void setDrawOverlay(boolean overlay) {
-        this.drawOverlay = overlay;
-    }
-
-    @Override
-    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-        super.onDraw(c, parent, state);
-        if (parent.getLayoutManager() == null || baseDecoration == null || drawOverlay) {
-            return;
-        }
-        baseDecoration.draw(this, c, parent, state);
-    }
-
     @Override
     public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
-        super.onDrawOver(c, parent, state);
-        if (parent.getLayoutManager() == null || baseDecoration == null || !drawOverlay) {
-            return;
+        mDecorations.modifyRange(parent);
+        try {
+            c.save();
+            final int childCount = parent.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                final View child = parent.getChildAt(i);
+                final int viewType = parent.getChildViewHolder(child).getItemViewType();
+                Decoration decoration = mDecorations.findDecoration(viewType);
+                if (null != decoration) {
+                    decoration.onDraw(this, c, child, parent, state);
+                }
+            }
+        } finally {
+            c.restore();
         }
-        baseDecoration.draw(this, c, parent, state);
     }
-
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                                RecyclerView.State state) {
-        final int typeIndex = condition.typeIndexOf(DecorationUtils.viewTypeOf(parent, view));
-        Decoration decoration = this.baseDecoration;
-        if (decoration == null || typeIndex == -1) {
-            outRect.setEmpty();
-            return;
+        int viewType = parent.getChildViewHolder(view).getItemViewType();
+        Decoration decoration = mDecorations.findDecoration(viewType);
+        if (null != decoration) {
+            decoration.getItemOffsets(outRect, view, parent, state);
         }
-        decoration.boundsOut(this, parent, view, state, outRect, typeIndex);
     }
 
-    public boolean isDrawOverlay() {
-        return drawOverlay;
+    static void put(Decorator decorator, int[] types, Decoration decoration) {
+        decorator.mDecorations.cacheDecoration(types, decoration);
     }
 
-    public boolean isDrawEnd(int typeIndex) {
-        Decoration decoration = this.baseDecoration;
-        if (null == decoration) {
-            return false;
+    public static boolean isLastItem(Decorator decorator, RecyclerView parent, View child) {
+        int index = parent.indexOfChild(child);
+        int nextItem = index + 1;
+        if (nextItem >= parent.getChildCount()) {
+            return true;
         }
-        decoration = decoration.searchDecoration(typeIndex);
-        return null != decoration && decoration.isDrawEnd();
+        View nextChild = parent.getChildAt(nextItem);
+
+        final int viewType = parent.getChildViewHolder(child).getItemViewType();
+        final int nextViewType = parent.getChildViewHolder(nextChild).getItemViewType();
+        if (viewType == nextViewType) {
+            return true;
+        }
+        return decorator.mDecorations.findDecoration(viewType) == decorator.mDecorations.findDecoration(nextViewType);
     }
+
 }
