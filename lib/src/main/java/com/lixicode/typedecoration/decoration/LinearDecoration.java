@@ -28,7 +28,7 @@ import static com.lixicode.typedecoration.Orientation.VERTICAL;
 
 
 /**
- * @author 陈晓辉
+ * @author lixi
  * @description <>
  * @date 2017/9/19
  */
@@ -38,9 +38,13 @@ public class LinearDecoration extends AbstractDecoration {
     private Drawable drawable;
 
 
-
     public LinearDecoration(@Nullable Drawable drawable) {
+        this(drawable, VERTICAL);
+    }
+
+    public LinearDecoration(@Nullable Drawable drawable, int orientation) {
         this.drawable = drawable;
+        this.setOrientation(orientation);
     }
 
 

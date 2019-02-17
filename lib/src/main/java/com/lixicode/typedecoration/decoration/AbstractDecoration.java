@@ -80,7 +80,7 @@ public abstract class AbstractDecoration implements Decoration {
     @Override
     public Range getRange() {
         if (null == range && autoCreateRange()) {
-            range = Range.create();
+            range = new Range();
         }
         return range;
     }

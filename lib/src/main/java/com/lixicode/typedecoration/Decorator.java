@@ -101,9 +101,9 @@ public class Decorator extends RecyclerView.ItemDecoration {
         final int viewType = parent.getChildViewHolder(child).getItemViewType();
         final int nextViewType = parent.getChildViewHolder(nextChild).getItemViewType();
         if (viewType == nextViewType) {
-            return true;
+            return false;
         }
-        return decorator.mDecorations.findDecoration(viewType) == decorator.mDecorations.findDecoration(nextViewType);
+        return decorator.mDecorations.findDecoration(viewType) != decorator.mDecorations.findDecoration(nextViewType);
     }
 
 }

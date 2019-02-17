@@ -62,6 +62,7 @@ interface DecorationManager {
             }
         }
 
+
     }
 
 
@@ -73,7 +74,7 @@ interface DecorationManager {
         public void modifyRange(RecyclerView parent) {
             Range range = mDecoration.getRange();
             if (null != range) {
-                range.set(0, parent.getChildCount());
+                range.set(0, 0, parent.getChildCount() - 1);
             }
         }
 
@@ -86,5 +87,7 @@ interface DecorationManager {
         public void cacheDecoration(int[] type, Decoration decoration) {
             this.mDecoration = decoration;
         }
+
+
     }
 }

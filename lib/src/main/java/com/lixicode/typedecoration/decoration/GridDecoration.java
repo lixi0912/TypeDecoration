@@ -70,7 +70,8 @@ public class GridDecoration extends AbstractDecoration {
         final int top = bottom - decorator.getBounds().height();
 
         final int index = parent.indexOfChild(child);
-        final int indexOfRange = index - getRange().getLower();
+        final int indexOfRange = getRange().indexOfRange(index);
+        final int length = getRange().length();
 
 
         if (indexOfRange % spanCount != (spanCount - 1)) {
@@ -81,7 +82,7 @@ public class GridDecoration extends AbstractDecoration {
         }
 
 
-        final boolean lastRaw = indexOfRange / spanCount == getRange().length() / spanCount;
+        final boolean lastRaw = indexOfRange / spanCount == length / spanCount;
         if (!lastRaw || isDrawEnd()) {
             drawable.setBounds(left + getMarginStart(), bottom - drawable.getIntrinsicHeight(), right - getMarginEnd(), bottom);
             drawable.draw(c);

@@ -9,6 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
@@ -26,13 +29,12 @@ import com.lixicode.typedecoration.decoration.LinearDecoration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VLayoutActivity extends AppCompatActivity {
+public class VLayoutActivity extends BaseActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recycler);
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
 
         VirtualLayoutManager manager = new VirtualLayoutManager(this);
         recyclerView.setLayoutManager(manager);
@@ -41,84 +43,102 @@ public class VLayoutActivity extends AppCompatActivity {
         List<DelegateAdapter.Adapter> adapters = new ArrayList<>();
 
 
-        int index$0 = adapters.size();
+        // int index$0 = adapters.size();
         LinearLayoutHelper layout$0 = new LinearLayoutHelper();
         adapters.add(new SubAdapter(this, layout$0, 3));
 
-
-        int index$1 = adapters.size();
-        GridLayoutHelper layout$1 = new GridLayoutHelper(3);
+        // int index$1 = adapters.size();
+        GridLayoutHelper layout$1 = new GridLayoutHelper(SPAN_COUNT);
         adapters.add(new SubAdapter(this, layout$1, 4));
 
 
-        int index$2 = adapters.size();
+        // int index$2 = adapters.size();
         LinearLayoutHelper layout$2 = new LinearLayoutHelper();
-        layout$2.setMarginTop(getResources().getDimensionPixelSize(R.dimen.margin));
-        layout$2.setBgColor(ContextCompat.getColor(this, R.color.item_activated_color));
         adapters.add(new SubAdapter(this, layout$2, 5));
 
-        int index$3 = adapters.size();
+        // int index$3 = adapters.size();
         LinearLayoutHelper layout$3 = new LinearLayoutHelper();
-        layout$3.setBgColor(ContextCompat.getColor(this, R.color.item_activated_color2));
         adapters.add(new SubAdapter(this, layout$3, 3));
 
 
-        int index$4 = adapters.size();
-        GridLayoutHelper layout$4 = new GridLayoutHelper(3);
+        // int index$4 = adapters.size();
+        GridLayoutHelper layout$4 = new GridLayoutHelper(SPAN_COUNT);
         adapters.add(new SubAdapter(this, layout$4, 5));
 
 
-        int index$5 = adapters.size();
+        // int index$5 = adapters.size();
         LinearLayoutHelper layout$5 = new LinearLayoutHelper();
-        layout$5.setBgColor(ContextCompat.getColor(this, R.color.item_activated_color3));
         adapters.add(new SubAdapter(this, layout$5, 3));
 
 
-        int index$6 = adapters.size();
-        StaggeredGridLayoutHelper layout$6 = new StaggeredGridLayoutHelper(2);
+        // int index$6 = adapters.size();
+        StaggeredGridLayoutHelper layout$6 = new StaggeredGridLayoutHelper(SPAN_COUNT);
         adapters.add(new SubAdapter(this, layout$6, 5));
 
 
-        int index$7 = adapters.size();
+        // int index$7 = adapters.size();
         OnePlusNLayoutHelper layout$7 = new OnePlusNLayoutHelper();
         adapters.add(new SubAdapter(this, layout$7, 5));
 
 
         delegateAdapter.setAdapters(adapters);
         recyclerView.setAdapter(delegateAdapter);
-
-
-        int margin = getResources().getDimensionPixelSize(R.dimen.margin);
-
-        Decorator decorator = DecoratorFactory.newBuilder()
-                .multi(
-                        DelegateAdapterCompat.encodeViewType(0, index$4)
-                )
-                .thenDecoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2), 3))
-                .andMarginEnd(margin)
-                .andMarginStart(margin)
-                .andDrawEnd(true)
-                .ifType(
-                        DelegateAdapterCompat.encodeViewType(0, index$6),
-                        DelegateAdapterCompat.encodeViewType(0, index$7)
-                )
-                .thenDecoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2), 5))
-                .ifType(DelegateAdapterCompat.encodeViewType(0, index$0))
-                .thenDecoration(new LinearDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2)))
-                .andMarginStart(margin)
-                .andMarginEnd(margin)
-                .ifType(
-                        DelegateAdapterCompat.encodeViewType(0, index$2),
-                        DelegateAdapterCompat.encodeViewType(0, index$3),
-                        DelegateAdapterCompat.encodeViewType(0, index$5)
-                )
-                .thenDecoration(new LinearDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2)))
-                .end();
-
-        recyclerView.addItemDecoration(decorator);
-
     }
 
+    @Override
+    protected void updateItemDecoration() {
+        recyclerView.removeItemDecoration(decorator);
+
+        decorator = DecoratorFactory.newBuilder()
+                .multi(
+                        // GridLayoutHelper
+                        DelegateAdapterCompat.encodeViewType(0, 4),
+                        DelegateAdapterCompat.encodeViewType(0, 1),
+                        // StaggeredGridLayoutHelper
+                        DelegateAdapterCompat.encodeViewType(0, 6)
+                )
+                .thenDecoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2), SPAN_COUNT))
+                .andMarginEnd(marginEnd)
+                .andMarginStart(marginStart)
+                .andDrawEnd(drawEnd)
+//                .ifType(
+//                        DelegateAdapterCompat.encodeViewType(0, 4)
+//                )
+//                .thenDecoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2), SPAN_COUNT))
+//                .andMarginEnd(marginEnd)
+//                .andMarginStart(marginStart)
+//                .andDrawEnd(drawEnd)
+//                .ifType(
+//                        DelegateAdapterCompat.encodeViewType(0, 1)
+//                )
+//                .thenDecoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2), SPAN_COUNT))
+//                .andMarginEnd(marginEnd)
+//                .andMarginStart(marginStart)
+//                .andDrawEnd(drawEnd)
+                .ifType(
+                        // OnePlusNLayoutHelper
+                        DelegateAdapterCompat.encodeViewType(0, 7)
+                )
+                .thenDecoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2), 5))
+                .andMarginEnd(marginEnd)
+                .andMarginStart(marginStart)
+                .andDrawEnd(drawEnd)
+                .ifType(
+                        // LinearLayoutHelper
+                        DelegateAdapterCompat.encodeViewType(0, 0),
+                        DelegateAdapterCompat.encodeViewType(0, 2),
+                        DelegateAdapterCompat.encodeViewType(0, 3),
+                        DelegateAdapterCompat.encodeViewType(0, 5)
+                )
+                .thenDecoration(new LinearDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2)))
+                .andMarginEnd(marginEnd)
+                .andMarginStart(marginStart)
+                .andDrawEnd(drawEnd)
+                .end();
+
+
+        recyclerView.addItemDecoration(decorator);
+    }
 
     /**
      * MIT License
@@ -151,7 +171,7 @@ public class VLayoutActivity extends AppCompatActivity {
 
 
         private RecyclerView.LayoutParams mLayoutParams;
-        private int mCount = 0;
+        private int mCount;
 
 
         public SubAdapter(Context context, LayoutHelper layoutHelper, int count) {
