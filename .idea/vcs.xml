@@ -2,5 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deploy" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/src/main/java/com/lixicode/typedecoration/deploy" vcs="Git" />
   </component>
 </project>
