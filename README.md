@@ -6,58 +6,60 @@ Project `TypeDecoration` is a powerful ItemDecoration extension for RecyclerView
 
 1. Simple way
 ```java
-     Decorator decorator = Decorator.newBuilder()
-                .noCondition()
-                .decoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2)))
-                .withDrawOverlay(true)// call draw or drawOver,default is false 
-                .end();
+    Decorator decorator = DecoratorFactory
+                      .newBuilder()
+                      .simple()
+                      .thenDecoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2), SPAN_COUNT))
+                      .andMarginStart(marginStart)
+                      .andMarginEnd(marginEnd)
+                      .andDrawEnd(drawEnd)
+                      .end();
 
-        recyclerView.addItemDecoration(decorator);
+    recyclerView.addItemDecoration(decorator);
 ```
 
 2. Complicated way
 ```java
 
-         MultiTypeDecoration decoration = new MultiTypeDecoration();
-              int margin = getResources().getDimensionPixelSize(R.dimen.margin);
+    Decorator decorator = DecoratorFactory.newBuilder()
+                     .multi(
+                             // GridLayoutHelper
+                             DelegateAdapterCompat.encodeViewType(0, 4),
+                             DelegateAdapterCompat.encodeViewType(0, 1),
+                             // StaggeredGridLayoutHelper
+                             DelegateAdapterCompat.encodeViewType(0, 6)
+                     )
+                     .thenDecoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2), SPAN_COUNT))
+                     .andMarginEnd(marginEnd)
+                     .andMarginStart(marginStart)
+                     .andDrawEnd(drawEnd)
+                     .ifType(
+                             // OnePlusNLayoutHelper
+                             DelegateAdapterCompat.encodeViewType(0, 7)
+                     )
+                     .thenDecoration(new OnePlusNDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical), 2))
+                     .andMarginEnd(marginEnd)
+                     .andMarginStart(marginStart)
+                     .andDrawEnd(drawEnd)
+                     .ifType(
+                             // LinearLayoutHelper
+                             DelegateAdapterCompat.encodeViewType(0, 0),
+                             DelegateAdapterCompat.encodeViewType(0, 2),
+                             DelegateAdapterCompat.encodeViewType(0, 3),
+                             DelegateAdapterCompat.encodeViewType(0, 5)
+                     )
+                     .thenDecoration(new LinearDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2)))
+                     .andMarginEnd(marginEnd)
+                     .andMarginStart(marginStart)
+                     .andDrawEnd(drawEnd)
+                     .end()
       
-              Decorator decorator = Decorator.newBuilder()
-                      .condition(new MultiTypeCondition())
-                      .decoration(decoration)
-                      .withDrawOverlay(true)
-                      .ifType(
-                              DelegateAdapterCompat.encodeViewType(0, index$4),
-                              DelegateAdapterCompat.encodeViewType(0, index$6),
-                              DelegateAdapterCompat.encodeViewType(0, index$7)
-                      )
-                      .thenDecoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2)))
-                      .andMarginEnd(margin)
-                      .andMarginStart(margin)
-                      .andDrawEnd(true)
-                      .ifType(DelegateAdapterCompat.encodeViewType(0, index$0))
-                      .thenDrawable(ContextCompat.getDrawable(this, R.drawable.divider_vertical2))
-                      .andMarginStart(margin)
-                      .andMarginEnd(margin)
-                      .ifType(DelegateAdapterCompat.encodeViewType(0, index$1))
-                      .thenNothing()
-                      .ifType(DelegateAdapterCompat.encodeViewType(0, index$2))
-                      .thenDrawable(DecorationUtils.listDivider(this))
-                      .ifType(
-                              DelegateAdapterCompat.encodeViewType(0, index$3),
-                              DelegateAdapterCompat.encodeViewType(0, index$5)
-                      )
-                      .thenDrawable(ContextCompat.getDrawable(this, R.drawable.divider_vertical2))
-                      .andDrawEnd(true)
-                      .andMarginStart(margin)
-                      .andMarginEnd(margin)
-                      .end();
-      
-              recyclerView.addItemDecoration(decorator);
+    recyclerView.addItemDecoration(decorator);
 ```
 
 ## Issue
 
-- [ ] When using GridLayout or StaggeredGridLayout, TypeDecoration cannot handle the last raw margin space ( marginStart and marginEnd )
+- [x] When using GridLayout or StaggeredGridLayout, TypeDecoration cannot handle the last raw margin space ( marginStart and marginEnd )
 
 
 ## Feature
