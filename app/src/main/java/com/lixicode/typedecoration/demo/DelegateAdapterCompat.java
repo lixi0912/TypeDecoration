@@ -1,7 +1,7 @@
 package com.lixicode.typedecoration.demo;
 
 /**
- * @author 陈晓辉
+ * @author lixi
  * @description <>
  * @date 2017/9/19
  */

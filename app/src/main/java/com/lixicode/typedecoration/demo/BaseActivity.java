@@ -20,11 +20,13 @@ import com.lixicode.typedecoration.decoration.GridDecoration;
  */
 public class BaseActivity extends AppCompatActivity {
 
+    protected static int SPAN_COUNT = 3;
 
     protected int marginStart;
     protected int marginEnd;
     protected boolean drawEnd;
 
+    protected Decorator decorator;
     protected RecyclerView recyclerView;
 
     @Override
@@ -86,9 +88,6 @@ public class BaseActivity extends AppCompatActivity {
         updateItemDecoration();
     }
 
-
-    protected Decorator decorator;
-    protected static int SPAN_COUNT = 3;
 
     protected void updateItemDecoration() {
         recyclerView.removeItemDecoration(decorator);

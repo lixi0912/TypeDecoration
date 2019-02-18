@@ -49,12 +49,6 @@ public class GridDecoration extends AbstractDecoration {
         this.spanCount = spanCount;
     }
 
-
-    @Override
-    public void getItemOffsets(Decorator decorator, Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-
-    }
-
     @Override
     protected boolean autoCreateRange() {
         return true;

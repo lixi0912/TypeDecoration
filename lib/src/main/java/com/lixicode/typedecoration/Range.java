@@ -12,11 +12,6 @@ public class Range {
 
     private final SparseIntArray ranges = new SparseIntArray(2);
 
-    public Range() {
-
-    }
-
-
     public int length(int value) {
         int index = searchIndex(value);
         return ranges.get(getLowerIndex(index), -1)

@@ -47,13 +47,6 @@ public class LinearDecoration extends AbstractDecoration {
         this.setOrientation(orientation);
     }
 
-
-    @Override
-    public void getItemOffsets(Decorator decorator, Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-
-    }
-
-
     private boolean needDraw(Decorator decorator, RecyclerView parent, View child) {
         // 判断当前是否需要绘制
         return null != drawable && (!Decorator.isLastItem(decorator, parent, child) || isDrawEnd());

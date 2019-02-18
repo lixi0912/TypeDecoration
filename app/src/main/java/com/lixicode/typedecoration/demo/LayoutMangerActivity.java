@@ -3,7 +3,6 @@ package com.lixicode.typedecoration.demo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,14 +10,9 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import com.lixicode.typedecoration.Decorator;
 import com.lixicode.typedecoration.DecoratorFactory;
-import com.lixicode.typedecoration.DecoratorFlow;
 import com.lixicode.typedecoration.decoration.GridDecoration;
 import com.lixicode.typedecoration.decoration.LinearDecoration;
 

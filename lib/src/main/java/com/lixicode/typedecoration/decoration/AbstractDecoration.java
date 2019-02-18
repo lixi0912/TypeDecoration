@@ -15,7 +15,12 @@
  */
 package com.lixicode.typedecoration.decoration;
 
+import android.graphics.Rect;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+
 import com.lixicode.typedecoration.Decoration;
+import com.lixicode.typedecoration.Decorator;
 import com.lixicode.typedecoration.Range;
 
 
@@ -72,6 +77,10 @@ public abstract class AbstractDecoration implements Decoration {
         return marginEnd;
     }
 
+    @Override
+    public void getItemOffsets(Decorator decorator, Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        // NO-OP
+    }
 
     protected boolean autoCreateRange() {
         return false;
