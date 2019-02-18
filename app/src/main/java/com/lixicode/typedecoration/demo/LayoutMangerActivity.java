@@ -18,7 +18,9 @@ import android.widget.TextView;
 
 import com.lixicode.typedecoration.Decorator;
 import com.lixicode.typedecoration.DecoratorFactory;
+import com.lixicode.typedecoration.DecoratorFlow;
 import com.lixicode.typedecoration.decoration.GridDecoration;
+import com.lixicode.typedecoration.decoration.LinearDecoration;
 
 /**
  * @author lixi
@@ -37,6 +39,11 @@ public class LayoutMangerActivity extends BaseActivity {
             public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 return new VLayoutActivity.MainViewHolder(LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item2, parent, false));
+            }
+
+            @Override
+            public int getItemViewType(int position) {
+                return position % 2;
             }
 
             @Override
@@ -78,6 +85,43 @@ public class LayoutMangerActivity extends BaseActivity {
         });
 
 
+    }
+
+    @Override
+    protected void updateItemDecoration() {
+        recyclerView.removeItemDecoration(decorator);
+        if (SPAN_COUNT > 1) {
+            decorator = DecoratorFactory
+                    .newBuilder()
+                    .multi(0)
+                    .thenDecoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2), SPAN_COUNT))
+                    .andMarginStart(marginStart)
+                    .andMarginEnd(marginEnd)
+                    .andDrawEnd(drawEnd)
+                    .ifType(1)
+                    .thenDecoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical), SPAN_COUNT))
+                    .andMarginStart(marginStart)
+                    .andMarginEnd(marginEnd)
+                    .andDrawEnd(drawEnd)
+                    .end();
+
+        } else {
+            decorator = DecoratorFactory
+                    .newBuilder()
+                    .multi(0)
+                    .thenDecoration(new LinearDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2)))
+                    .andMarginStart(marginStart)
+                    .andMarginEnd(marginEnd)
+                    .andDrawEnd(drawEnd)
+                    .ifType(1)
+                    .thenDecoration(new LinearDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical)))
+                    .andMarginStart(marginStart)
+                    .andMarginEnd(marginEnd)
+                    .andDrawEnd(drawEnd)
+                    .end();
+        }
+
+        recyclerView.addItemDecoration(decorator);
     }
 
 

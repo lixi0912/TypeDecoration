@@ -10,8 +10,6 @@ import android.util.SparseIntArray;
  */
 public class Range {
 
-
-    private int index;
     private final SparseIntArray ranges = new SparseIntArray(2);
 
     public Range() {
@@ -19,18 +17,10 @@ public class Range {
     }
 
 
-    private int getLower() {
-        int key = getLowerIndex(index);
-        return ranges.get(key, -1);
-    }
-
-    private int getUpper() {
-        int key = getUpperIndex(index);
-        return ranges.get(key, -1);
-    }
-
-    public int length() {
-        return getUpper() - getLower();
+    public int length(int value) {
+        int index = searchIndex(value);
+        return ranges.get(getLowerIndex(index), -1)
+                - ranges.get(getLowerIndex(index), -1);
     }
 
     public void set(int index, int lower, int upper) {
@@ -57,24 +47,30 @@ public class Range {
         ranges.put(size + 1, value);
     }
 
+    private int searchIndex(int value) {
+        final   SparseIntArray ranges = this.ranges;
+        int size = ranges.size();
+        if (size != 0) {
+            int index = 0;
+            for (int i = 0; i < size; ) {
+                if (value >= ranges.get(i) && value <= ranges.get(i + 1)) {
+                    return index;
+                }
+                i += 2;
+                index++;
+            }
+        }
+        return 0;
+    }
 
     public int indexOfRange(int value) {
+        int index = searchIndex(value);
         SparseIntArray ranges = this.ranges;
-        int size = ranges.size();
-        if (size == 0) {
-            return -1;
+        int lower = ranges.get(getLowerIndex(index), -1);
+        if (lower != -1) {
+            return value - lower;
         }
-        index = 0;
-        for (int i = 0; i < size; ) {
-            int lower = ranges.get(i);
-            int upper = ranges.get(i + 1);
-            if (value >= lower && value <= upper) {
-                return value - lower;
-            }
-            i += 2;
-            index++;
-        }
-        return -1;
+        return lower;
     }
 
 

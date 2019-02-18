@@ -79,10 +79,11 @@ public class Decorator extends RecyclerView.ItemDecoration {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                                RecyclerView.State state) {
+        mDecorations.modifyRange(parent);
         int viewType = parent.getChildViewHolder(view).getItemViewType();
         Decoration decoration = mDecorations.findDecoration(viewType);
         if (null != decoration) {
-            decoration.getItemOffsets(outRect, view, parent, state);
+            decoration.getItemOffsets(this, outRect, view, parent, state);
         }
     }
 

@@ -24,7 +24,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.lixicode.typedecoration.Decorator;
-import com.lixicode.typedecoration.Range;
+
+import static com.lixicode.typedecoration.Orientation.VERTICAL;
 
 /**
  * @author 陈晓辉
@@ -50,7 +51,7 @@ public class GridDecoration extends AbstractDecoration {
 
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+    public void getItemOffsets(Decorator decorator, Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
 
     }
 
@@ -72,7 +73,7 @@ public class GridDecoration extends AbstractDecoration {
 
         final int index = parent.indexOfChild(child);
         final int indexOfRange = getRange().indexOfRange(index);
-        final int length = getRange().length();
+        final int length = getRange().length(index);
 
         drawRight(c, parent, indexOfRange, left, top, right, bottom, drawable);
         drawBottom(c, parent, indexOfRange, left, top, right, bottom, length, drawable);
@@ -94,7 +95,7 @@ public class GridDecoration extends AbstractDecoration {
         final boolean fullItem = parent.getClipToPadding() && right == parent.getRight() - parent.getPaddingRight()
                 || right == parent.getRight();
 
-        final boolean excludeLastColumn = indexOfRange % spanCount != (spanCount - 1) || !fullItem;
+        final boolean excludeLastColumn = indexOfRange % spanCount != (spanCount - 1) && !fullItem;
         if (excludeLastColumn) {
             // 如果不是最后一列
             int drawableWidth = drawable.getIntrinsicWidth() / 2;

@@ -49,15 +49,8 @@ public class LinearDecoration extends AbstractDecoration {
 
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        if (needDraw(null, parent, view)) {
-            assert drawable != null;
-            if (getOrientation() == VERTICAL) {
-                outRect.set(0, 0, 0, drawable.getIntrinsicHeight());
-            } else {
-                outRect.set(0, 0, drawable.getIntrinsicWidth(), 0);
-            }
-        }
+    public void getItemOffsets(Decorator decorator, Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+
     }
 
 
