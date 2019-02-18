@@ -4,14 +4,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
@@ -21,7 +17,7 @@ import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
 import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
-import com.lixicode.typedecoration.Decorator;
+import com.lixicode.typeddecoration.vlayout.decoration.OnePlusNDecoration;
 import com.lixicode.typedecoration.DecoratorFactory;
 import com.lixicode.typedecoration.decoration.GridDecoration;
 import com.lixicode.typedecoration.decoration.LinearDecoration;
@@ -119,7 +115,7 @@ public class VLayoutActivity extends BaseActivity {
                         // OnePlusNLayoutHelper
                         DelegateAdapterCompat.encodeViewType(0, 7)
                 )
-                .thenDecoration(new GridDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical2), 5))
+                .thenDecoration(new OnePlusNDecoration(ContextCompat.getDrawable(this, R.drawable.divider_vertical), 2))
                 .andMarginEnd(marginEnd)
                 .andMarginStart(marginStart)
                 .andDrawEnd(drawEnd)

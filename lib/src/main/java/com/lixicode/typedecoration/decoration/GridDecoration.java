@@ -18,6 +18,7 @@ package com.lixicode.typedecoration.decoration;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -33,10 +34,10 @@ import com.lixicode.typedecoration.Range;
 public class GridDecoration extends AbstractDecoration {
 
 
-    private int spanCount;
+    protected int spanCount;
 
     @Nullable
-    private Drawable drawable;
+    protected Drawable drawable;
 
     public GridDecoration(@Nullable Drawable drawable, int spanCount) {
         this.drawable = drawable;
@@ -59,7 +60,7 @@ public class GridDecoration extends AbstractDecoration {
     }
 
     @Override
-    public void onDraw(Decorator decorator, Canvas c, View child, RecyclerView parent, RecyclerView.State state) {
+    public final void onDraw(Decorator decorator, Canvas c, View child, RecyclerView parent, RecyclerView.State state) {
         if (null == drawable) {
             return;
         }
@@ -73,21 +74,33 @@ public class GridDecoration extends AbstractDecoration {
         final int indexOfRange = getRange().indexOfRange(index);
         final int length = getRange().length();
 
+        drawRight(c, parent, indexOfRange, left, top, right, bottom, drawable);
+        drawBottom(c, parent, indexOfRange, left, top, right, bottom, length, drawable);
+    }
 
-        if (indexOfRange % spanCount != (spanCount - 1)) {
+
+    protected void drawBottom(Canvas c, RecyclerView parent, int indexOfRange,
+                              int left, int top, int right, int bottom, int length,
+                              @NonNull Drawable drawable) {
+        final boolean excludeLastRow = indexOfRange / spanCount != length / spanCount;
+        if (excludeLastRow || isDrawEnd()) {
+            drawable.setBounds(left + getMarginStart(), bottom - drawable.getIntrinsicHeight(), right - getMarginEnd(), bottom);
+            drawable.draw(c);
+        }
+    }
+
+    protected void drawRight(Canvas c, RecyclerView parent, int indexOfRange, int left, int top, int right, int bottom, @NonNull Drawable drawable) {
+        // vlayout - auto expand
+        final boolean fullItem = parent.getClipToPadding() && right == parent.getRight() - parent.getPaddingRight()
+                || right == parent.getRight();
+
+        final boolean excludeLastColumn = indexOfRange % spanCount != (spanCount - 1) || !fullItem;
+        if (excludeLastColumn) {
             // 如果不是最后一列
             int drawableWidth = drawable.getIntrinsicWidth() / 2;
             drawable.setBounds(right - drawableWidth, top + getMarginStart(), right + drawableWidth, bottom - getMarginEnd());
             drawable.draw(c);
         }
-
-
-        final boolean lastRaw = indexOfRange / spanCount == length / spanCount;
-        if (!lastRaw || isDrawEnd()) {
-            drawable.setBounds(left + getMarginStart(), bottom - drawable.getIntrinsicHeight(), right - getMarginEnd(), bottom);
-            drawable.draw(c);
-        }
-
 
     }
 
